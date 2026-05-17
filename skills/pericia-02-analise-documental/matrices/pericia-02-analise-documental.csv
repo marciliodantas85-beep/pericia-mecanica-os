@@ -1,0 +1,4 @@
+﻿id_documento,tipo,origem,data,alegacao_relacionada,quesito,forca_documental,integridade,lacuna,fonte_regra
+DOC-001,manual,fabricante,preencher,uso/manutenção,Q-01,alta se modelo/série compatíveis,verificar versão,confirmar equipamento,manual oficial do fabricante
+DOC-002,certificado,laboratório,preencher,medição,Q-02,depende de escopo/rastreabilidade,verificar validade,confirmar RBC/Cgcre,INMETRO/Cgcre
+DOC-003,foto,parte/autos,preencher,dano,Q-03,média,verificar metadados/original,pedir original se necessário,CPC art. 473 §3º; ISO/IEC 27037

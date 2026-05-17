@@ -1,0 +1,341 @@
+import csv
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+HEADERS = [
+    "ID",
+    "Categoria",
+    "Fonte",
+    "Tipo",
+    "Instituição",
+    "Tema",
+    "Regra ou conhecimento extraído",
+    "Skill alimentada",
+    "Aplicação prática",
+    "Confiabilidade",
+    "Atualização necessária",
+    "Observações",
+]
+
+
+def row(
+    id_,
+    categoria,
+    fonte,
+    tipo,
+    instituicao,
+    tema,
+    regra,
+    skills,
+    aplicacao,
+    confiabilidade="Alta",
+    atualizacao="Sim - verificar vigência/edição antes de uso externo",
+    observacoes="",
+):
+    return {
+        "ID": id_,
+        "Categoria": categoria,
+        "Fonte": fonte,
+        "Tipo": tipo,
+        "Instituição": instituicao,
+        "Tema": tema,
+        "Regra ou conhecimento extraído": regra,
+        "Skill alimentada": skills,
+        "Aplicação prática": aplicacao,
+        "Confiabilidade": confiabilidade,
+        "Atualização necessária": atualizacao,
+        "Observações": observacoes,
+    }
+
+
+ROWS = [
+    row("MM-001", "Processo judicial", "Código de Processo Civil, arts. 95, 156-158 e 464-480", "Lei processual", "Presidência da República", "Regime geral da perícia judicial", "A perícia depende de conhecimento técnico, exige perito habilitado, permite exame/vistoria/avaliação e impõe deveres de cumprimento, informação e responsabilidade.", "pericia-01-triagem-processual; pericia-08-laudo-mecanico; pericia-11-controle-prazos", "Basear aceite, escopo, deveres, substituição, segunda perícia e limites do trabalho pericial.", observacoes="Fonte obrigatória. Não confundir com cartilhas ou comentários."),
+    row("MM-002", "Processo judicial", "Código de Processo Civil, arts. 465, 469, 470, 474 e 477", "Lei processual", "Presidência da República", "Quesitos, assistentes, comunicação e esclarecimentos", "Nomeado o perito, partes têm prazo para quesitos/assistentes; quesitos suplementares podem surgir; diligências exigem ciência; laudo pode demandar esclarecimentos.", "pericia-04-matriz-quesitos; pericia-05-roteiro-diligencia; pericia-09-revisao-impugnacao; pericia-11-controle-prazos", "Controlar prazos, consolidar quesitos e documentar comunicação das partes antes da vistoria.", observacoes="Fonte obrigatória para contraditório técnico."),
+    row("MM-003", "Processo judicial", "Código de Processo Civil, arts. 471, 472, 479 e 480", "Lei processual", "Presidência da República", "Perícia consensual, dispensa, valoração e segunda perícia", "A prova pericial pode ser dispensada se documentos forem suficientes; o juiz valorará a prova pelo método; segunda perícia cabe se a matéria não estiver esclarecida.", "pericia-01-triagem-processual; pericia-02-analise-documental; pericia-09-revisao-impugnacao", "Classificar suficiência documental e apontar quando o caso exige perícia, complementação ou nova perícia.", observacoes="Não usar para substituir decisão judicial; usar como triagem técnica."),
+    row("MM-004", "Processo judicial", "Jurisprudência oficial do STJ sobre honorários, custeio, intimação e suspeição de perito", "Jurisprudência", "Superior Tribunal de Justiça", "Custeio e incidentes processuais envolvendo perito", "Precedentes ajudam a resolver custeio de perícia de ofício, honorários em gratuidade, intimação do perito e recurso contra decisão de suspeição.", "pericia-03-proposta-honorarios; pericia-09-revisao-impugnacao; pericia-10-peticoes", "Usar como reforço argumentativo em petições e impugnações, sem substituir CPC, CNJ ou ato local.", atualizacao="Sim - verificar precedentes mais recentes e aderência ao caso", observacoes="Fonte consultiva forte, não é regra automática para todo caso."),
+
+    row("MM-005", "Honorários", "Código de Processo Civil, art. 95", "Lei processual", "Presidência da República", "Adiantamento e rateio de honorários", "O assistente é pago pela parte que o indicou; o perito é adiantado por quem requereu a prova ou rateado conforme a origem da determinação.", "pericia-03-proposta-honorarios; pericia-10-peticoes", "Definir pedido de depósito, rateio, complementação e regime inicial de custeio.", observacoes="Fonte obrigatória."),
+    row("MM-006", "Honorários", "Resolução CNJ 232/2016", "Resolução", "Conselho Nacional de Justiça", "Honorários em justiça gratuita", "O arbitramento deve considerar complexidade, especialização, lugar, tempo, zelo e peculiaridades regionais, com tabela local quando houver.", "pericia-03-proposta-honorarios; pericia-11-controle-prazos", "Fundamentar proposta e checar limites nacionais quando houver gratuidade.", observacoes="Fonte obrigatória no regime de gratuidade."),
+    row("MM-007", "Honorários", "Portarias TJCE 1218/2025 e 968/2026 e tabelas anuais", "Portaria/tabela local", "Tribunal de Justiça do Estado do Ceará", "Valores e vigência de honorários periciais", "A tabela aplicável depende da data de realização da perícia e da rubrica local, com possibilidade de majoração conforme ato vigente.", "pericia-03-proposta-honorarios; pericia-10-peticoes; pericia-11-controle-prazos", "Selecionar rubrica de Engenharia e Arquitetura ou subitem pertinente e marcar data de vigência.", atualizacao="Sim - verificar tabela anual, portaria vigente e datas de aplicação", observacoes="Fonte altamente temporal; conferir portal do TJCE."),
+    row("MM-008", "Honorários", "Resolução OE TJCE 07/2024", "Resolução local", "TJCE", "Pagamento de peritos no Ceará", "No TJCE, o pagamento por orçamento público segue fluxo próprio e pode depender da entrega definitiva do laudo, sem adiantamento de despesas.", "pericia-03-proposta-honorarios; pericia-10-peticoes", "Avaliar viabilidade operacional, fluxo de pagamento e exceções antes de aceitar ou propor honorários.", observacoes="Fonte local obrigatória quando o processo for do TJCE."),
+    row("MM-009", "Honorários", "Regulamento de Honorários do IBAPE/SP", "Regulamento profissional consultivo", "IBAPE/SP", "Composição econômica do trabalho pericial", "A decomposição por horas, complexidade, deslocamento, equipe, documentos e insumos ajuda a justificar o esforço técnico.", "pericia-03-proposta-honorarios", "Gerar memória de cálculo e justificar complementação, sem substituir tabela judicial.", atualizacao="Sim - verificar edição do regulamento", observacoes="Fonte consultiva; não transformar em obrigação legal."),
+
+    row("MM-010", "Cadastro de peritos", "Resolução CNJ 233/2016", "Resolução", "CNJ", "CPTEC e cadastro eletrônico de peritos", "Tribunais devem manter cadastro, validar documentação, publicar edital e reavaliar periodicamente a qualificação dos profissionais.", "pericia-01-triagem-processual; pericia-02-analise-documental; pericia-10-peticoes; pericia-11-controle-prazos", "Checar cadastro, restrições, documentação, deveres e impedimentos antes do aceite.", observacoes="Fonte obrigatória de governança nacional."),
+    row("MM-011", "Cadastro de peritos", "Resolução OE TJCE 07/2024", "Resolução local", "TJCE", "Credenciamento, nomeação e pagamento local", "O credenciamento é eletrônico, exige documentação e orienta nomeação/pagamento dentro do tribunal.", "pericia-01-triagem-processual; pericia-03-proposta-honorarios; pericia-10-peticoes", "Montar checklist de credenciamento, certidões, capacidade técnica e hipóteses excepcionais.", observacoes="Fonte local prioritária."),
+    row("MM-012", "Cadastro de peritos", "Resolução TJCE 14/2022", "Resolução local", "TJCE", "SIPER", "Institui o SIPER como sistema operacional para peritos e magistrados no Judiciário cearense.", "pericia-01-triagem-processual; pericia-10-peticoes; pericia-11-controle-prazos", "Conferir cadastro, atualizações, opções de atuação e fluxo operacional no sistema.", observacoes="Verificar manuais e mudanças do sistema."),
+    row("MM-013", "Cadastro de peritos", "Manual do Perito no PJe do TJCE e páginas de certidões/documentação", "Manual operacional", "TJCE", "Acesso a autos, perfis, protocolos e documentos", "Após credenciamento, o perito precisa de perfis operacionais adequados no PJe e documentação atualizada.", "pericia-01-triagem-processual; pericia-10-peticoes; pericia-11-controle-prazos", "Testar acesso, perfis, protocolo e pagamentos; controlar certidões vencíveis.", observacoes="Manual não substitui norma processual."),
+
+    row("MM-014", "ART e CREA", "Lei 6.496/1977", "Lei profissional", "Presidência da República", "ART e responsabilidade técnica", "Todo serviço técnico de engenharia deve ter ART; a ART define o responsável técnico para efeitos legais.", "pericia-01-triagem-processual; pericia-03-proposta-honorarios; pericia-08-laudo-mecanico; pericia-10-peticoes", "Prever ART no aceite, proposta, laudo e fechamento documental.", observacoes="Fonte obrigatória profissional."),
+    row("MM-015", "ART e CREA", "Resolução Confea 1.137/2023 e Decisão Normativa 120/2023", "Resolução/decisão normativa", "Confea", "ART, acervo e tabela de obras e serviços", "A classificação da ART deve refletir atividade real, forma de participação, escopo e enquadramento técnico; a Resolução 1.025/2009 está revogada.", "pericia-01-triagem-processual; pericia-03-proposta-honorarios; pericia-08-laudo-mecanico; pericia-12-biblioteca-normas", "Selecionar TOS, tipo de ART, coautoria/equipe e anexar comprovantes quando cabível.", atualizacao="Sim - verificar alterações do Confea e orientação do CREA competente", observacoes="Fonte obrigatória para rotina atual de ART."),
+    row("MM-016", "ART e CREA", "Manuais e páginas oficiais de CREA sobre ART, TOS, regularização, baixa e CAT", "Manual operacional oficial", "CREAs", "Operação administrativa da ART", "A ART precisa ser emitida, quitada, compatível com atribuições e passível de baixa/regularização quando aplicável.", "pericia-03-proposta-honorarios; pericia-10-peticoes; pericia-11-controle-prazos; pericia-12-biblioteca-normas", "Criar checklists de emissão, quitação, comprovante, baixa e eventual regularização.", atualizacao="Sim - varia por CREA e sistema", observacoes="Orientação operacional, não lei geral."),
+    row("MM-017", "ART e CREA", "Resolução Confea 345/1990", "Resolução profissional", "Confea", "Atividades periciais e regularidade profissional", "Vistorias, perícias, avaliações e arbitramentos são atribuição de profissionais legalmente habilitados e vinculam responsabilidade técnica.", "pericia-01-triagem-processual; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Checar se laudo anterior, vistoria ou avaliação tem profissional habilitado, registro e ART quando cabível.", observacoes="Fonte conceitual central."),
+
+    row("MM-018", "Atribuições profissionais", "Lei 5.194/1966", "Lei profissional", "Presidência da República", "Exercício profissional e valor jurídico de laudos", "Laudos e trabalhos técnicos devem indicar profissional habilitado, título e registro, sob pena de fragilidade formal.", "pericia-01-triagem-processual; pericia-02-analise-documental; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Validar autoria, título, CREA, assinatura e compatibilidade profissional.", observacoes="Fonte obrigatória."),
+    row("MM-019", "Atribuições profissionais", "Resolução Confea 218/1973", "Resolução profissional", "Confea", "Campo do engenheiro mecânico", "O engenheiro mecânico atua em processos mecânicos, máquinas, instalações mecânicas, sistemas térmicos, refrigeração, HVAC e correlatos.", "pericia-01-triagem-processual; pericia-02-analise-documental; pericia-08-laudo-mecanico", "Bloquear ou ressalvar perícias fora do núcleo mecânico; sugerir equipe multidisciplinar.", atualizacao="Sim - confirmar com atribuições individuais no CREA", observacoes="Não basta o título; consultar registro real."),
+    row("MM-020", "Atribuições profissionais", "Resolução Confea 1.073/2016", "Resolução profissional", "Confea", "Títulos, competências e extensão de atribuições", "Experiência prática não amplia automaticamente atribuição formal; extensão depende de análise e registro.", "pericia-01-triagem-processual; pericia-09-revisao-impugnacao; pericia-12-biblioteca-normas", "Checar extensão formal antes de aceitar objeto interdisciplinar.", observacoes="Fonte obrigatória profissional."),
+    row("MM-021", "Atribuições profissionais", "Manuais CREA-CE/CEEMM e materiais operacionais de atribuições mecânicas", "Manual operacional", "CREA-CE e outros CREAs", "Aplicação prática de atribuições mecânicas", "Materiais locais ajudam a interpretar manutenção, inspeção, vistoria, equipamentos, caldeiras, vasos, elevadores e sistemas mecânicos.", "pericia-01-triagem-processual; pericia-05-roteiro-diligencia; pericia-12-biblioteca-normas", "Usar como apoio operacional para casos cearenses e consulta à câmara especializada quando houver dúvida.", atualizacao="Sim - verificar versão e CREA competente", observacoes="Fonte consultiva operacional."),
+
+    row("MM-022", "Perícia de engenharia", "Resolução Confea 345/1990", "Resolução profissional", "Confea", "Conceitos de vistoria, perícia, avaliação e arbitramento", "Vistoria constata; perícia apura causas; avaliação quantifica valor; arbitramento decide tecnicamente entre alternativas controvertidas.", "pericia-04-matriz-quesitos; pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Classificar a natureza do trabalho antes de definir metodologia, ART e estrutura do laudo.", observacoes="Evita confusão terminológica."),
+    row("MM-023", "Perícia de engenharia", "Norma Básica para Perícias de Engenharia do IBAPE/SP", "Norma institucional consultiva", "IBAPE/SP", "Metodologia pericial e apresentação", "Orienta objetividade, não prejulgamento, respostas a quesitos e estrutura lógica do trabalho pericial.", "pericia-02-analise-documental; pericia-04-matriz-quesitos; pericia-08-laudo-mecanico", "Apoiar método, redação e controle de omissões, sem substituir CPC.", atualizacao="Sim - verificar edição/status, inclusive versões históricas", observacoes="Fonte consultiva institucional."),
+    row("MM-024", "Perícia de engenharia", "ABNT NBR 13752", "Norma técnica paga", "ABNT", "Metodologia de perícias de engenharia", "Serve como backbone de método, escopo, vistoria e apresentação, mas com aplicação por analogia à mecânica.", "pericia-02-analise-documental; pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico; pericia-12-biblioteca-normas", "Criar ficha-resumo e checklist derivado, sem reproduzir a norma integral.", atualizacao="Sim - confirmar edição no ABNT Catálogo", observacoes="Norma paga; não copiar integralmente."),
+    row("MM-025", "Perícia de engenharia", "Cartilha Perícias Judiciais de Engenharia e Arquitetura", "Cartilha institucional", "IBAPE/SP", "Fluxo pericial, laudo, fotos e esclarecimentos", "Ajuda a organizar pontos controvertidos, diligências, relatório fotográfico, respostas e esclarecimentos.", "pericia-02-analise-documental; pericia-05-roteiro-diligencia; pericia-07-anexo-fotografico; pericia-08-laudo-mecanico", "Usar como guia de boa prática e comunicação técnica.", atualizacao="Sim - citar edição", observacoes="Não é lei."),
+
+    row("MM-026", "Laudo pericial", "Código de Processo Civil, art. 473", "Lei processual", "Presidência da República", "Conteúdo mínimo do laudo", "O laudo deve conter objeto, análise técnica/científica, método utilizado e resposta conclusiva a todos os quesitos, em linguagem simples e coerente.", "pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Validar estrutura mínima antes de protocolar ou revisar o laudo.", observacoes="Fonte obrigatória e central."),
+    row("MM-027", "Laudo pericial", "Estrutura padrão do laudo pericial mecânico judicial pesquisada", "Modelo técnico autoral", "Base interna pericia-mecanica-os", "Arquitetura do laudo mecânico", "Identificação, preliminares, documentos, metodologia, análise, quesitos, conclusão, limitações e anexos devem ser separados.", "pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Gerar template de laudo e checklist anti-impugnação.", atualizacao="Sim - revisar quando mudarem fontes-base", observacoes="Modelo derivado, não fonte normativa."),
+    row("MM-028", "Laudo pericial", "CNJ - Linguagem Simples e Manual de Padronização de Atos", "Guia institucional", "CNJ", "Clareza e inteligibilidade", "A redação deve ser simples, direta, coesa e compreensível sem perder precisão técnica.", "pericia-02-analise-documental; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao; pericia-10-peticoes", "Reduzir ambiguidade, jargão excessivo e respostas obscuras.", observacoes="Fonte consultiva alinhada ao CPC art. 473."),
+    row("MM-029", "Laudo pericial", "Manual de Redação da Presidência da República", "Manual de redação oficial", "Presidência da República", "Impessoalidade, clareza e concisão", "A peça técnica deve evitar prolixidade, subjetividade e tom argumentativo excessivo.", "pericia-08-laudo-mecanico; pericia-10-peticoes", "Padronizar estilo de laudos, manifestações e petições do perito.", atualizacao="Sim - verificar edição vigente", observacoes="Não é fonte técnica de engenharia."),
+
+    row("MM-030", "Quesitos", "Código de Processo Civil, arts. 465, 469, 470, 473 e 477", "Lei processual", "Presidência da República", "Formulação, suplementação e resposta a quesitos", "Todos os quesitos deferidos devem ser controlados e respondidos; suplementares podem surgir durante diligência; omissão gera risco de esclarecimentos.", "pericia-04-matriz-quesitos; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Criar matriz com origem, tema, método, evidência e status de resposta.", observacoes="Fonte obrigatória."),
+    row("MM-031", "Quesitos", "IBAPE/SP - Cartilha e Norma Básica", "Fonte institucional consultiva", "IBAPE/SP", "Resposta objetiva e fundamentada", "Respostas devem ser claras, objetivas, fundamentadas e limitadas ao campo técnico.", "pericia-04-matriz-quesitos; pericia-08-laudo-mecanico", "Evitar respostas monossilábicas, evasivas ou jurídicas.", atualizacao="Sim - citar edição/status", observacoes="Boa prática, não obrigação autônoma."),
+    row("MM-032", "Quesitos", "Matriz interna de quesitos pericia-mecanica-os", "Modelo operacional", "Base interna pericia-mecanica-os", "Rastreabilidade pergunta-método-evidência", "Cada quesito deve ter fonte, evidência, método, limitação e status de resposta.", "pericia-04-matriz-quesitos; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Automatizar controle de completude antes do protocolo.", atualizacao="Sim - atualizar com quesitos suplementares", observacoes="Modelo derivado das fontes."),
+
+    row("MM-033", "Diligência", "Código de Processo Civil, arts. 466, 474 e 473, §3º", "Lei processual", "Presidência da República", "Meios necessários e ciência das partes", "O perito pode ouvir pessoas, solicitar documentos e instruir laudo com fotografias e outros elementos, preservando ciência das partes.", "pericia-05-roteiro-diligencia; pericia-06-inventario-evidencias; pericia-07-anexo-fotografico", "Planejar comunicação, ata, documentos, evidências e anexos.", observacoes="Fonte obrigatória."),
+    row("MM-034", "Diligência", "Base de boas práticas para diligência, evidências e registro fotográfico", "Base técnica interna", "Base interna pericia-mecanica-os", "Procedimento-base de vistoria mecânica", "Planejar saída, comunicar partes, registrar presentes, fotografar local/equipamento/danos, medir com instrumento identificado e encerrar com limitações.", "pericia-05-roteiro-diligencia; pericia-06-inventario-evidencias; pericia-07-anexo-fotografico", "Gerar checklist de campo, ata de vistoria e plano fotográfico.", atualizacao="Sim - revisar com novas fontes e experiência prática", observacoes="Modelo operacional derivado."),
+    row("MM-035", "Diligência", "NR-12", "Norma regulamentadora", "Ministério do Trabalho e Emprego", "Riscos e segurança em máquinas", "Diligência em máquina deve considerar proteções, operação, manutenção, inspeção, energia, riscos e estado de segurança na data do fato.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico", "Preparar EPI, roteiro de segurança e perguntas sobre adequação/manutenção.", atualizacao="Sim - verificar portarias e texto oficial", observacoes="Obrigatória em segurança de máquinas."),
+    row("MM-036", "Diligência", "ABNT NBR ISO 12100", "Norma técnica paga", "ABNT", "Apreciação e redução de riscos", "A diligência deve identificar limites da máquina, perigos, uso previsto, mau uso previsível e risco residual.", "pericia-05-roteiro-diligencia; 14_segurança de máquinas; pericia-12-biblioteca-normas", "Criar checklist de limites, perigos, medidas de proteção e riscos residuais.", atualizacao="Sim - confirmar edição no catálogo", observacoes="Não copiar integralmente; subsidiária à NR-12."),
+
+    row("MM-037", "Evidências", "Código de Processo Civil, art. 473, §3º", "Lei processual", "Presidência da República", "Elementos materiais de fundamentação", "O perito pode valer-se de todos os meios materiais necessários, incluindo fotografias, desenhos, planilhas e outros elementos.", "pericia-06-inventario-evidencias; pericia-07-anexo-fotografico; pericia-08-laudo-mecanico", "Vincular cada evidência a quesito, método e seção do laudo.", observacoes="Fonte obrigatória."),
+    row("MM-038", "Evidências", "ABNT NBR ISO/IEC 27037:2013", "Norma técnica paga", "ABNT", "Evidência digital", "Fotos, vídeos, planilhas, logs e PDFs nativos devem ser tratados como evidência digital quando integridade e temporalidade importarem.", "pericia-02-analise-documental; pericia-06-inventario-evidencias; pericia-07-anexo-fotografico", "Manter original, registrar metadados, hash quando útil e cópia de trabalho.", atualizacao="Sim - confirmar edição/licença", observacoes="Não copiar integralmente."),
+    row("MM-039", "Evidências", "CPP, arts. 158-A e seguintes", "Lei penal - uso analógico", "Presidência da República", "Cadeia de custódia", "A lógica de procedência, documentação e preservação de vestígios pode ser usada por analogia metodológica em perícia cível/mecânica.", "pericia-06-inventario-evidencias; pericia-09-revisao-impugnacao", "Registrar origem, transferência, preservação e indisponibilidade de evidências sensíveis.", atualizacao="Sim - verificar texto legal vigente", observacoes="Não converter automaticamente regra penal em obrigação cível."),
+    row("MM-040", "Evidências", "POPs nacionais de perícia criminal e POP de Informática Forense/MJSP", "Manual técnico oficial", "Ministério da Justiça e Segurança Pública", "Integridade e anexos eletrônicos", "Registro de datas, horários, origem, hash e anexos eletrônicos aumenta rastreabilidade.", "pericia-02-analise-documental; pericia-06-inventario-evidencias", "Criar procedimento para arquivos digitais, logs, mídias e anexos relevantes.", atualizacao="Sim - verificar versão oficial", observacoes="Boa prática por analogia."),
+
+    row("MM-041", "Fotografia técnica", "IBAPE/SP - Cartilha Perícias Judiciais de Engenharia e Arquitetura", "Cartilha institucional", "IBAPE/SP", "Relatório fotográfico", "Fotografias devem ter legenda, numeração, contexto e pertinência técnica.", "pericia-07-anexo-fotografico; pericia-08-laudo-mecanico", "Gerar anexo fotográfico em sequência lógica com vínculos aos quesitos.", atualizacao="Sim - citar edição", observacoes="Fonte consultiva forte."),
+    row("MM-042", "Fotografia técnica", "Guias de evidência visual e boas práticas de documentação fotográfica", "Guia consultivo", "Fontes técnicas abertas", "Contexto visual e metadados", "Cada imagem deve permitir identificar quem, o quê, onde, quando e por que foi registrada.", "pericia-05-roteiro-diligencia; pericia-07-anexo-fotografico", "Exigir local, data, autoria, finalidade e limitação em cada legenda.", confiabilidade="Média/Alta", atualizacao="Sim - verificar fonte e versão", observacoes="Fonte secundária; não substitui CPC/IBAPE."),
+    row("MM-043", "Fotografia técnica", "Critérios internos de foto válida x fraca", "Modelo operacional", "Base interna pericia-mecanica-os", "Qualidade da imagem", "Foto válida precisa de identificação, sequência, nitidez, escala quando necessária, iluminação, rastreabilidade, pertinência e integridade.", "pericia-07-anexo-fotografico; pericia-09-revisao-impugnacao", "Classificar imagens como válidas, válidas com ressalva, fracas ou inconclusivas.", atualizacao="Sim - revisar com uso prático", observacoes="Critério derivado das fontes."),
+    row("MM-044", "Fotografia técnica", "ABNT NBR ISO/IEC 27037:2013", "Norma técnica paga", "ABNT", "Preservação de foto e vídeo digital", "Original não deve ser editado; cópias de trabalho devem ser identificadas e rastreadas.", "pericia-06-inventario-evidencias; pericia-07-anexo-fotografico", "Separar pasta de originais, derivados e anexos finais.", atualizacao="Sim - confirmar edição/licença", observacoes="Não reproduzir norma."),
+
+    row("MM-045", "Análise documental", "Código de Processo Civil, arts. 319, 320, 336, 369 e 434", "Lei processual", "Presidência da República", "Inicial, contestação e prova documental", "Alegações devem ser lidas junto aos documentos que as instruem; documento não equivale automaticamente a fato técnico comprovado.", "pericia-02-analise-documental", "Gerar matriz de alegações, documentos, contradições e suficiência.", observacoes="Fonte obrigatória."),
+    row("MM-046", "Análise documental", "Base normativa e metodológica da skill analise-documental-processual", "Base interna", "Base interna pericia-mecanica-os", "Classificação documental", "Documentos devem ser classificados por classe, força, integridade, vínculo com ativo, contemporaneidade e relação com quesitos.", "pericia-02-analise-documental; pericia-06-inventario-evidencias", "Gerar relatório preliminar, matriz documental e lista de lacunas.", atualizacao="Sim - revisar com novos casos", observacoes="Modelo operacional derivado."),
+    row("MM-047", "Análise documental", "IBAPE/SP - Norma de Perícias Grafoscópicas e Digitais", "Norma institucional consultiva", "IBAPE/SP", "Documentos questionados, scans e baixa qualidade", "Digitalização, perda de nitidez, recortes e alterações limitam conclusões sobre autenticidade e integridade.", "pericia-02-analise-documental; pericia-06-inventario-evidencias", "Recomendar original ou arquivo nativo quando autenticidade, cronologia ou integridade importarem.", atualizacao="Sim - verificar edição/status", observacoes="Aplicação por analogia; não substitui perícia grafotécnica."),
+    row("MM-048", "Análise documental", "Inmetro/Cgcre - RBC, NIT-DICLA e DOQs", "Documento técnico institucional", "Inmetro/Cgcre", "Certificados e laudos laboratoriais", "Relatórios de ensaio e calibração devem ser avaliados por laboratório, escopo, rastreabilidade, data e pertinência da grandeza.", "pericia-02-analise-documental; pericia-06-inventario-evidencias; 15_metrologia", "Checar certificado antes de usar medição como base de conclusão.", atualizacao="Sim - verificar documentos Cgcre e laboratório na RBC", observacoes="Filtro técnico, não conclusão isolada."),
+
+    row("MM-049", "Análise de falhas mecânicas", "ASM Handbook Vol. 11 - Failure Analysis and Prevention", "Handbook técnico comercial", "ASM International", "Falha, fratura, fadiga, desgaste e corrosão", "Análise de falhas deve ser sistemática, baseada em evidências, histórico, inspeção, materiais e mecanismos compatíveis.", "pericia-04-matriz-quesitos; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Apoiar nexo causal em peças, eixos, engrenagens, rolamentos e componentes metálicos.", atualizacao="Sim - verificar edição/licença", observacoes="Livro comercial; guardar ficha e notas, não copiar integralmente."),
+    row("MM-050", "Análise de falhas mecânicas", "Machinery Failure Analysis and Troubleshooting - Heinz Bloch", "Livro técnico comercial", "Elsevier", "Máquinas de processo e troubleshooting", "Falhas em bombas, compressores e máquinas rotativas exigem leitura de operação, instalação, lubrificação, alinhamento e manutenção.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico", "Gerar perguntas de diligência e hipóteses técnicas de falha.", atualizacao="Sim - verificar edição/licença", observacoes="Referência consultiva técnica."),
+    row("MM-051", "Análise de falhas mecânicas", "Root Cause Failure Analysis - R. Keith Mobley", "Livro técnico comercial", "Elsevier", "RCFA", "A análise de causa raiz deve diferenciar sintoma, modo de falha, causa imediata, causa raiz e prevenção de recorrência.", "pericia-04-matriz-quesitos; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Estruturar matriz de causalidade e evitar conclusões simplistas.", atualizacao="Sim - verificar edição/licença", observacoes="Não transforma RCFA em obrigação legal."),
+    row("MM-052", "Análise de falhas mecânicas", "SKF Bearing Damage and Failure Analysis", "Guia técnico de fabricante", "SKF", "Rolamentos", "Padrões de dano em rolamentos devem ser confrontados com lubrificação, contaminação, desalinhamento, carga, montagem e fadiga.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico", "Apoiar análise de rolamentos, motores, bombas, redutores e eixos.", atualizacao="Sim - verificar versão oficial", observacoes="Fonte de fabricante; usar tecnicamente, não como norma universal."),
+    row("MM-053", "Análise de falhas mecânicas", "Shigley's Mechanical Engineering Design", "Livro técnico comercial", "McGraw Hill", "Projeto mecânico, fadiga e elementos de máquinas", "A plausibilidade de falha deve considerar projeto, carga, tensão, fadiga, materiais, fatores geométricos e uso real.", "pericia-04-matriz-quesitos; pericia-08-laudo-mecanico", "Apoiar cálculo, plausibilidade e contestação de hipóteses incompatíveis.", atualizacao="Sim - verificar edição/licença", observacoes="Referência técnica consultiva."),
+
+    row("MM-054", "Segurança de máquinas", "NR-12", "Norma regulamentadora", "Ministério do Trabalho e Emprego", "Segurança em máquinas e equipamentos", "Aplica-se a projeto, fabricação, importação, comercialização, exposição, cessão e utilização, incluindo operação, limpeza, manutenção, inspeção e desativação.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao; pericia-12-biblioteca-normas", "Checar data, estado de proteção, adequação, uso previsível e medidas de segurança.", atualizacao="Sim - verificar portaria e texto oficial", observacoes="Obrigatória quando aplicável."),
+    row("MM-055", "Segurança de máquinas", "Manual de Aplicação da NR-12", "Manual oficial consultivo", "MTE/Gov.br", "Interpretação operacional da NR-12", "O manual traduz requisitos em funções de segurança, sistemas de comando, apreciação de riscos e normas ABNT/ISO correlatas.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Transformar requisitos em checklist de diligência e revisão.", atualizacao="Sim - verificar versão oficial", observacoes="Manual não substitui NR-12."),
+    row("MM-056", "Segurança de máquinas", "ABNT NBR ISO 12100", "Norma técnica paga", "ABNT", "Apreciação e redução de riscos", "Identificar limites da máquina, perigos, estimação e redução de riscos, e risco residual.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico", "Criar roteiro de avaliação de risco e limites da máquina.", atualizacao="Sim - confirmar edição/licença", observacoes="Referência subsidiária; não copiar."),
+    row("MM-057", "Segurança de máquinas", "ABNT NBR ISO 13849-1/2 e ABNT NBR 14153", "Normas técnicas pagas", "ABNT", "Sistemas de comando relacionados à segurança", "Funções de segurança exigem categoria, performance level, validação, cobertura diagnóstica e análise de falhas.", "pericia-05-roteiro-diligencia; pericia-09-revisao-impugnacao", "Checar CLP de segurança, relés, intertravamentos, redundância e validação documental.", atualizacao="Sim - confirmar edições/licença", observacoes="Normas pagas; usar fichas e checklists derivados."),
+    row("MM-058", "Segurança de máquinas", "ABNT NBR ISO 13850, 13855, 13857, 14118, 14119 e 14120", "Normas técnicas pagas", "ABNT", "Parada de emergência, distâncias, partida inesperada, intertravamentos e proteções", "Proteções e dispositivos de segurança precisam ser avaliados por distância, tempo, acesso, prevenção de burla, partida inesperada e robustez.", "pericia-05-roteiro-diligencia; pericia-06-inventario-evidencias; pericia-09-revisao-impugnacao", "Gerar checklist de fotos e medições de proteções, aberturas, sensores e emergências.", atualizacao="Sim - confirmar edições/licença", observacoes="Normas pagas."),
+    row("MM-059", "Segurança de máquinas", "ABNT NBR ISO 4413 e 4414", "Normas técnicas pagas", "ABNT", "Sistemas hidráulicos e pneumáticos", "Sistemas de fluido de potência devem ser avaliados quanto a energia acumulada, válvulas, travamentos, contaminação, segurança e partida inesperada.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico", "Roteirizar diligências em prensas, cilindros, atuadores, compressores e linhas pneumáticas.", atualizacao="Sim - confirmar edições/licença", observacoes="Normas pagas."),
+
+    row("MM-060", "Metrologia", "ABNT NBR ISO/IEC 17025", "Norma técnica paga", "ABNT", "Competência de laboratórios", "Ensaios e calibrações usados no laudo devem ser avaliados por competência, imparcialidade, escopo e rastreabilidade do laboratório.", "pericia-02-analise-documental; pericia-06-inventario-evidencias; pericia-08-laudo-mecanico", "Auditar certificado de calibração, relatório de ensaio e laboratório.", atualizacao="Sim - confirmar edição/licença", observacoes="Não reproduzir integralmente."),
+    row("MM-061", "Metrologia", "GUM - Guia para Expressão da Incerteza de Medição", "Guia técnico", "Inmetro/BIPM/JCGM", "Incerteza de medição", "Resultado de medição crítico deve indicar unidade, método, instrumento, incerteza e condições relevantes.", "pericia-05-roteiro-diligencia; pericia-06-inventario-evidencias; pericia-08-laudo-mecanico", "Padronizar campos de medição e evitar conclusão sem incerteza quando ela impactar o caso.", atualizacao="Sim - verificar versão adotada", observacoes="Fonte técnica institucional."),
+    row("MM-062", "Metrologia", "VIM - Vocabulário Internacional de Metrologia", "Vocabulário técnico", "Inmetro/BIPM/JCGM", "Terminologia metrológica", "Usar termos técnicos consistentes para medição, calibração, rastreabilidade, erro, incerteza, repetibilidade e reprodutibilidade.", "pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao; pericia-12-biblioteca-normas", "Criar glossário metrológico e padronizar linguagem do laudo.", atualizacao="Sim - verificar versão", observacoes="Evita ambiguidade técnica."),
+    row("MM-063", "Metrologia", "RBC/Inmetro, NIT-DICLA-030, NIT-DICLA-021 e DOQ-Cgcre", "Documento técnico institucional", "Inmetro/Cgcre", "Rastreabilidade, acreditação e calibração", "Certificado deve ter laboratório, escopo, data, instrumento, grandeza, rastreabilidade e incerteza coerentes.", "pericia-02-analise-documental; pericia-06-inventario-evidencias; pericia-12-biblioteca-normas", "Verificar laboratório acreditado, escopo e validade frente ao evento.", atualizacao="Sim - verificar base RBC e documentos Cgcre", observacoes="Fonte pública institucional."),
+    row("MM-064", "Metrologia", "ABNT ISO 10012 e ABNT ISO 5725", "Normas técnicas pagas", "ABNT", "Gestão de medição, exatidão e precisão", "Processos de medição precisam ser controlados; comparação de resultados requer atenção a repetibilidade, reprodutibilidade e precisão.", "pericia-06-inventario-evidencias; pericia-09-revisao-impugnacao", "Criticar medições inconsistentes, instrumentos sem controle e resultados incompatíveis.", atualizacao="Sim - confirmar edição/licença", observacoes="Normas pagas."),
+
+    row("MM-065", "Manutenção", "ABNT NBR 5462", "Norma técnica paga", "ABNT", "Confiabilidade e mantenabilidade", "Padroniza vocabulário de falha, defeito, manutenção, confiabilidade e mantenabilidade.", "pericia-02-analise-documental; pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Evitar confundir falha, defeito, dano, mau uso, desgaste e manutenção.", atualizacao="Sim - confirmar edição/licença", observacoes="Não copiar integralmente."),
+    row("MM-066", "Manutenção", "ABNT NBR ISO 14224", "Norma técnica paga", "ABNT/ISO", "Dados de confiabilidade e manutenção", "Históricos de manutenção devem ser coletados de forma estruturada por equipamento, modo de falha, causa, consequência e intervenção.", "pericia-02-analise-documental; pericia-06-inventario-evidencias; pericia-08-laudo-mecanico", "Estruturar coleta de OS, logs, paradas, MTBF, peças e recorrência.", atualizacao="Sim - confirmar edição no catálogo", observacoes="Referência técnica paga."),
+    row("MM-067", "Manutenção", "ABNT NBR ISO 17359", "Norma técnica paga", "ABNT/ISO", "Monitoramento de condição e diagnóstico de máquinas", "Condição de máquina deve considerar vibração, temperatura, lubrificação, ruído, inspeção e tendência histórica.", "pericia-05-roteiro-diligencia; pericia-06-inventario-evidencias", "Criar checklist para manutenção preditiva e dados de condição.", atualizacao="Sim - confirmar edição no catálogo", observacoes="Referência técnica paga."),
+    row("MM-068", "Manutenção", "Reliability-centered Maintenance", "Livro técnico comercial", "Elsevier", "RCM e criticidade funcional", "A adequação de manutenção depende de função, modo de falha, consequência, criticidade e tarefa preventiva/preditiva aplicável.", "pericia-08-laudo-mecanico; pericia-09-revisao-impugnacao", "Discutir evitabilidade da falha e suficiência do plano de manutenção.", atualizacao="Sim - verificar edição/licença", observacoes="Fonte consultiva técnica."),
+    row("MM-069", "Manutenção", "Practical Machinery Vibration Analysis and Predictive Maintenance", "Livro técnico comercial", "Elsevier", "Vibração e manutenção preditiva", "Falhas por desalinhamento, desbalanceamento, folga e rolamentos podem demandar análise de vibração e tendência.", "pericia-05-roteiro-diligencia; pericia-08-laudo-mecanico", "Definir medições, dados preditivos e hipóteses mecânicas.", atualizacao="Sim - verificar edição/licença", observacoes="Fonte consultiva técnica."),
+
+    row("MM-070", "Normas técnicas", "ABNT Catálogo e ABNT Coleção", "Catálogo/licenciamento", "ABNT", "Obtenção legal de normas", "Normas pagas devem ser adquiridas ou consultadas legalmente; na base, guardar ficha, escopo, edição, índice de uso e notas próprias.", "pericia-12-biblioteca-normas", "Controlar licença, edição, data de consulta e restrição de armazenamento.", atualizacao="Sim - verificar edição antes de citar", observacoes="Regra de copyright central."),
+    row("MM-071", "Normas técnicas", "ABNT NBR 14653-1 e ABNT NBR 14653-5", "Normas técnicas pagas", "ABNT", "Avaliação de bens, máquinas e equipamentos", "Quando o litígio envolver valor, depreciação, vida útil, custo de reposição ou bens industriais, aplicar a família 14653, especialmente Parte 5.", "pericia-06-inventario-evidencias; pericia-08-laudo-mecanico; pericia-12-biblioteca-normas", "Criar ficha de avaliação de máquinas e coleta de dados patrimoniais.", atualizacao="Sim - confirmar edição/licença", observacoes="Não substitui análise de falhas ou NR-12."),
+    row("MM-072", "Normas técnicas", "ABNT NBR 16747", "Norma técnica paga", "ABNT", "Inspeção sistemática por analogia", "Embora predial, fornece lógica útil de anamnese, inspeção, classificação de anomalias e recomendações quando máquina está em instalação/edificação.", "pericia-05-roteiro-diligencia; pericia-12-biblioteca-normas", "Usar por analogia apenas quando ajudar o método de inspeção.", atualizacao="Sim - confirmar edição/licença", observacoes="Não é norma de mecânica."),
+    row("MM-073", "Normas técnicas", "IBAPE Nacional - Coletânea Técnica, diretrizes e biblioteca", "Publicação institucional", "IBAPE Nacional/IBAPE-SP", "Apoio técnico e metodológico", "Boletins, diretrizes e cartilhas ajudam a transformar normas e prática em roteiro pericial.", "pericia-02-analise-documental; pericia-08-laudo-mecanico; pericia-12-biblioteca-normas", "Catalogar PDFs públicos, edição, status e aplicação por skill.", atualizacao="Sim - verificar edição e status", observacoes="Fonte consultiva institucional."),
+
+    row("MM-074", "Revisão contra impugnação", "Código de Processo Civil, arts. 477, 479 e 480", "Lei processual", "Presidência da República", "Manifestação das partes, valoração e segunda perícia", "Após laudo, partes podem se manifestar; o perito esclarece pontos; juiz valora o método e pode determinar segunda perícia.", "pericia-09-revisao-impugnacao; pericia-10-peticoes", "Responder impugnação ponto a ponto e identificar omissão real, esclarecimento ou complementação.", observacoes="Fonte obrigatória."),
+    row("MM-075", "Revisão contra impugnação", "Resolução Confea 1.002/2002", "Código de ética profissional", "Confea", "Postura técnica e imparcialidade", "A revisão deve preservar imparcialidade, diligência e responsabilidade, evitando resposta defensiva ou pessoal.", "pericia-09-revisao-impugnacao; pericia-10-peticoes", "Auditar linguagem, tom, escopo e correção de erro material.", atualizacao="Sim - verificar versão", observacoes="Fonte profissional obrigatória."),
+    row("MM-076", "Revisão contra impugnação", "IBAPE/SP - Cartilha Perícias Judiciais", "Cartilha institucional", "IBAPE/SP", "Parecer do assistente e esclarecimentos", "O parecer do assistente deve ficar nas questões técnicas; esclarecimentos podem corrigir ou complementar sem virar defesa de parte.", "pericia-09-revisao-impugnacao", "Criar matriz de impugnação com alegação, trecho do laudo, resposta e providência.", atualizacao="Sim - citar edição", observacoes="Boa prática."),
+    row("MM-077", "Revisão contra impugnação", "CNJ - Linguagem Simples", "Guia institucional", "CNJ", "Resposta clara e compreensível", "Esclarecimentos devem ser objetivos, rastreáveis e compreensíveis ao juízo e às partes.", "pericia-09-revisao-impugnacao; pericia-10-peticoes", "Evitar tom combativo e responder por pontos numerados.", atualizacao="Sim - verificar edição", observacoes="Fonte consultiva."),
+
+    row("MM-078", "Petições", "Código de Processo Civil, arts. 95, 148, 149, 157, 465, 466, 474 e 477", "Lei processual", "Presidência da República", "Manifestações do perito", "Aceite, escusa, impedimento, honorários, documentos, comunicação de diligência, prorrogação, juntada e esclarecimentos devem ter pedido claro e fundamento suficiente.", "pericia-10-peticoes", "Gerar peças padronizadas com objeto, fundamento, pedido e anexos.", observacoes="Fonte obrigatória."),
+    row("MM-079", "Petições", "Manual do Perito no PJe do TJCE e Resolução OE TJCE 07/2024", "Manual e resolução local", "TJCE", "Protocolo, cadastro e pagamento", "Atos do perito no TJCE precisam respeitar fluxo PJe/SIPER/PAJ e documentos locais.", "pericia-10-peticoes; pericia-11-controle-prazos", "Gerar petições compatíveis com o fluxo local e controlar documentos anexos.", atualizacao="Sim - verificar sistema e ato vigente", observacoes="Local; adaptar a outros tribunais."),
+    row("MM-080", "Petições", "Manual de Redação da Presidência da República", "Manual de redação", "Presidência da República", "Clareza e impessoalidade", "Petições do perito devem ser objetivas, impessoais e sem defesa jurídica das partes.", "pericia-10-peticoes", "Padronizar tom, fecho, pedidos e estrutura.", atualizacao="Sim - verificar edição", observacoes="Fonte de redação, não técnica."),
+    row("MM-081", "Petições", "Jurisprudência oficial do STJ", "Jurisprudência", "STJ", "Honorários, suspeição e custeio", "Precedentes podem reforçar pedidos de custeio, intimação e processamento de incidentes.", "pericia-10-peticoes; pericia-03-proposta-honorarios", "Usar apenas quando o pedido exigir reforço jurídico-processual.", atualizacao="Sim - verificar precedentes atuais", observacoes="Não substituir lei."),
+
+    row("MM-082", "Modelos e templates", "Estrutura padrão do laudo pericial mecânico judicial", "Template interno", "Base interna pericia-mecanica-os", "Laudo pericial", "Template deve conter identificação, objeto, documentos, metodologia, análise, quesitos, conclusão, limitações, referências e anexos.", "pericia-08-laudo-mecanico", "Gerar LAUDO_PERICIAL_MECANICO.docx/.md.", atualizacao="Sim - revisar com prática e fontes", observacoes="Modelo operacional."),
+    row("MM-083", "Modelos e templates", "Modelo de inventário de evidências", "Template CSV", "Base interna pericia-mecanica-os", "Rastreabilidade de evidências", "Inventário deve registrar ID, tipo, origem, data/hora, local, descrição, arquivo, preservação, relevância, quesitos, limitações e status.", "pericia-06-inventario-evidencias", "Gerar INVENTARIO_EVIDENCIAS.csv e validar campos obrigatórios.", atualizacao="Sim - revisar conforme novos tipos de evidência", observacoes="Template operacional."),
+    row("MM-084", "Modelos e templates", "Modelo de ata/termo de vistoria técnica", "Template .md/.docx", "Base interna pericia-mecanica-os", "Registro de diligência", "Ata deve registrar processo, local, presentes, objeto, acesso, condições, documentos, evidências, medições, limitações e pendências.", "pericia-05-roteiro-diligencia", "Gerar ATA_VISTORIA_TECNICA.docx para campo.", atualizacao="Sim - revisar com prática de diligências", observacoes="Template operacional."),
+    row("MM-085", "Modelos e templates", "Modelo de anexo fotográfico", "Template .md/.docx", "Base interna pericia-mecanica-os", "Relatório fotográfico", "Cada foto deve ter arquivo, data/hora, local, descrição técnica, finalidade, quesitos e limitação.", "pericia-07-anexo-fotografico", "Gerar ANEXO_FOTOGRAFICO.docx/.md a partir do inventário.", atualizacao="Sim - revisar padrões visuais", observacoes="Template operacional."),
+    row("MM-086", "Modelos e templates", "Modelos de petição do perito", "Template .docx/.md", "Base interna pericia-mecanica-os", "Aceite, honorários, diligência, prorrogação e esclarecimentos", "Modelos devem ter pedido claro, fundamento mínimo, anexos e linguagem impessoal.", "pericia-10-peticoes", "Gerar biblioteca de modelos .docx editáveis.", atualizacao="Sim - adaptar ao tribunal", observacoes="Não usar como petição de parte."),
+]
+
+
+RECOMMENDED_MD = [
+    "references/README.md",
+    "references/01_juridico_processual/README.md",
+    "references/02_confea_crea_art/README.md",
+    "references/03_tjce_cnj_honorarios/README.md",
+    "references/04_abnt_normas_tecnicas/README.md",
+    "references/05_ibape_pericias/README.md",
+    "references/06_engenharia_mecanica_forense/README.md",
+    "references/07_analise_falhas/README.md",
+    "references/08_metrologia/README.md",
+    "references/09_seguranca_maquinas_nr12/README.md",
+    "references/10_evidencias_fotografias/README.md",
+    "references/11_modelos_laudos_peticoes/README.md",
+    "FONTES_OFICIAIS_ATUALIZAVEIS.md",
+    "CHECKLIST_ATUALIZACAO_REFERENCIAS.md",
+    "POLITICA_FONTES.md",
+]
+
+
+RECOMMENDED_CSV = [
+    "references/matriz_mestra_conhecimento.csv",
+    "references/catalogo_fontes.csv",
+    "references/fontes_verificacao_periodica.csv",
+    "references/matriz_quesitos.csv",
+    "references/matriz_documental.csv",
+    "references/inventario_evidencias.csv",
+    "references/controle_prazos_pericia.csv",
+    "references/memoria_honorarios.csv",
+    "references/matriz_riscos_laudo.csv",
+    "references/checklist_validacao_laudo.csv",
+    "references/registro_art_crea.csv",
+    "references/controle_templates_docx.csv",
+]
+
+
+RECOMMENDED_DOCX = [
+    "templates/LAUDO_PERICIAL_MECANICO.docx",
+    "templates/ANEXO_FOTOGRAFICO.docx",
+    "templates/ATA_VISTORIA_TECNICA.docx",
+    "templates/RELATORIO_ANALISE_DOCUMENTAL.docx",
+    "templates/PROPOSTA_HONORARIOS_PERICIAIS.docx",
+    "templates/PETICAO_ACEITE_ENCARGO.docx",
+    "templates/PETICAO_ESCUSA_IMPEDIMENTO_SUSPEICAO.docx",
+    "templates/PETICAO_PEDIDO_DOCUMENTOS.docx",
+    "templates/PETICAO_COMUNICACAO_DILIGENCIA.docx",
+    "templates/PETICAO_PRORROGACAO_PRAZO.docx",
+    "templates/PETICAO_JUNTADA_LAUDO.docx",
+    "templates/MANIFESTACAO_ESCLARECIMENTOS.docx",
+    "templates/RESPOSTA_IMPUGNACAO_LAUDO.docx",
+    "templates/TERMO_EVIDENCIA_NAO_DISPONIVEL.docx",
+    "templates/FICHA_FONTE_NORMATIVA.docx",
+]
+
+
+RECOMMENDED_SCRIPTS = [
+    "scripts/validar_estrutura_repositorio.py - confere se todas as skills têm SKILL.md e os 10 arquivos de references.",
+    "scripts/exportar_matriz_mestra.py - gera Markdown, CSV e índice por categoria/skill.",
+    "scripts/verificar_fontes_periodicas.py - lista fontes [VP] e datas de revisão vencidas.",
+    "scripts/validar_restricoes_copyright.py - alerta possível cópia indevida de ABNT/livros e falta de ficha de licença.",
+    "scripts/validar_laudo_art473.py - checa objeto, método, análise, quesitos, conclusão e limitações.",
+    "scripts/validar_matriz_quesitos.py - detecta quesitos sem resposta, sem evidência ou com ressalva pendente.",
+    "scripts/gerar_inventario_evidencias.py - cria CSV a partir de pasta de fotos/documentos e nomes padronizados.",
+    "scripts/calcular_hash_evidencias.py - calcula SHA-256 de arquivos originais e gera manifesto.",
+    "scripts/validar_anexo_fotografico.py - confere legenda, arquivo, data, local, finalidade, quesito e limitação.",
+    "scripts/validar_medicoes_metrologia.py - confere unidade, instrumento, certificado, laboratório, rastreabilidade e incerteza.",
+    "scripts/gerar_memoria_honorarios.py - monta planilha de horas, despesas, ART, deslocamentos e tabela local.",
+    "scripts/validar_peticao_perito.py - alerta tom de parte, pedido ausente, prazo vencido ou fundamento incompatível.",
+    "scripts/gerar_docx_templates.py - converte modelos Markdown em .docx com identidade visual.",
+]
+
+
+AUTOMATIC_CHECKS = [
+    "Conferir se cada skill possui SKILL.md e references/01 a references/10.",
+    "Conferir se toda fonte possui natureza: obrigatória, local, boa prática, referência técnica, consultiva ou literatura.",
+    "Listar fontes marcadas [VP] e pedir verificação periódica de CPC, CNJ, TJCE, Confea, NR-12, ABNT e IBAPE.",
+    "Detectar menções a normas ABNT/livros comerciais sem aviso de licença ou com cópia extensa indevida.",
+    "Checar se laudo contém os quatro elementos do CPC art. 473: objeto, análise, método e respostas aos quesitos.",
+    "Checar se todos os quesitos da matriz aparecem respondidos no laudo.",
+    "Checar se cada conclusão do laudo tem evidência, documento, medição, norma ou limitação vinculada.",
+    "Checar se o laudo contém título profissional, CREA, ART ou justificativa para pendência.",
+    "Checar termos de risco jurídico como culpa, dolo, ilegalidade, negligência ou responsabilidade e sugerir ressalva técnica.",
+    "Checar se fotos do anexo têm número, arquivo, data/hora, local, descrição técnica, finalidade, quesito e limitação.",
+    "Checar se medições têm unidade, instrumento, calibração/certificado, condição operacional e incerteza quando relevante.",
+    "Checar se evidências digitais preservam original, hash quando cabível, origem e cópia de trabalho.",
+    "Checar se proposta de honorários possui regime de custeio, tabela local, data de vigência, memória de cálculo e ART.",
+    "Checar se prazos têm data de gatilho, data limite, status e última conferência no PJe/calendário.",
+    "Checar se petições têm pedido claro, fundamento mínimo, anexos e linguagem de perito, não de parte.",
+    "Checar se fontes locais do TJCE não estão sendo aplicadas automaticamente a outros tribunais.",
+    "Checar se fonte consultiva foi apresentada como obrigação legal e sinalizar correção.",
+    "Checar duplicidade ou divergência entre matriz documental, inventário de evidências e anexo fotográfico.",
+]
+
+
+def escape_md(value):
+    return str(value).replace("\n", "<br>").replace("|", "\\|")
+
+
+def md_table(headers, rows):
+    lines = [
+        "| " + " | ".join(headers) + " |",
+        "| " + " | ".join(["---"] * len(headers)) + " |",
+    ]
+    for item in rows:
+        lines.append("| " + " | ".join(escape_md(item[h]) for h in headers) + " |")
+    return "\n".join(lines)
+
+
+def bullet_list(items):
+    return "\n".join(f"- `{item}`" for item in items)
+
+
+def plain_bullets(items):
+    return "\n".join(f"- {item}" for item in items)
+
+
+def build_markdown():
+    content = [
+        "# Matriz Mestra de Conhecimento - pericia-mecanica-os",
+        "",
+        "Esta matriz consolida as fontes pesquisadas em categorias operacionais para as skills do projeto. Ela diferencia norma obrigatória, norma local, boa prática, referência técnica, jurisprudência e literatura consultiva.",
+        "",
+        "Regras de uso:",
+        "",
+        "- Não copiar integralmente normas pagas, livros comerciais ou standards protegidos por licença.",
+        "- Não misturar lei com opinião técnica.",
+        "- Não transformar fonte consultiva em obrigação legal.",
+        "- Diferenciar norma obrigatória, boa prática e referência técnica em toda saída.",
+        "- Verificar periodicamente fontes com atualização necessária, especialmente CPC/CNJ, TJCE, Confea/Crea, NR-12, ABNT e tabelas de honorários.",
+        "",
+        md_table(HEADERS, ROWS),
+        "",
+        "## Arquivos .md Recomendados Para /references",
+        "",
+        bullet_list(RECOMMENDED_MD),
+        "",
+        "## Arquivos .csv Recomendados",
+        "",
+        bullet_list(RECOMMENDED_CSV),
+        "",
+        "## Templates .docx Recomendados",
+        "",
+        bullet_list(RECOMMENDED_DOCX),
+        "",
+        "## Scripts Úteis",
+        "",
+        plain_bullets(RECOMMENDED_SCRIPTS),
+        "",
+        "## Verificações Automáticas Que o Codex Pode Fazer",
+        "",
+        plain_bullets(AUTOMATIC_CHECKS),
+        "",
+    ]
+    return "\n".join(content)
+
+
+def write_manifest():
+    paths = []
+    for path in sorted(ROOT.glob("**/*")):
+        if path.is_file():
+            paths.append(str(path.relative_to(ROOT)).replace("\\", "/"))
+    (ROOT / "MANIFESTO_ARQUIVOS.md").write_text(
+        "# Manifesto de Arquivos\n\n" + "\n".join(f"- `{p}`" for p in paths) + "\n",
+        encoding="utf-8",
+    )
+
+
+def main():
+    md_path = ROOT / "MATRIZ_MESTRA_CONHECIMENTO.md"
+    csv_path = ROOT / "MATRIZ_MESTRA_CONHECIMENTO.csv"
+    md_path.write_text(build_markdown(), encoding="utf-8")
+    with csv_path.open("w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=HEADERS)
+        writer.writeheader()
+        writer.writerows(ROWS)
+    write_manifest()
+
+
+if __name__ == "__main__":
+    main()

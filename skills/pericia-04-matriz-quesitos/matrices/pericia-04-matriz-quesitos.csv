@@ -1,0 +1,4 @@
+﻿id_quesito,origem,texto_resumido,tema,metodo,evidencia,status,resposta_resumida,limitacao,fonte_regra
+QJ-01,juízo,preencher,escopo,análise documental,DOC-001,pendente,preencher,,CPC art. 473
+QA-01,autor,preencher,causa de falha,inspeção/RCFA,EVD-001,pendente,preencher,depende de vistoria,CPC arts. 465/469
+QR-01,réu,preencher,manutenção,documental + diligência,DOC-002,pendente,preencher,,CPC art. 477 se esclarecimento

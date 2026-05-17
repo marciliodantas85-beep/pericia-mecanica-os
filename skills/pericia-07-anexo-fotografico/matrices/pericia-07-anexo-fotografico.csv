@@ -1,0 +1,4 @@
+﻿foto_id,arquivo,descricao_tecnica,local,data,quesito,qualidade,limitacao,uso_no_laudo
+F-001,IMG_0001.jpg,vista geral do equipamento,preencher,preencher,Q-01,boa,,contexto
+F-002,IMG_0002.jpg,detalhe do dano,preencher,preencher,Q-03,avaliar,"sem escala, se aplicável",análise
+F-003,IMG_0003.jpg,placa de identificação,preencher,preencher,Q-01,boa,,identificação

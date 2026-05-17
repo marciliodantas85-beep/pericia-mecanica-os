@@ -1,0 +1,12 @@
+# Fontes Secundárias - Roteiro de Diligência Mecânica
+
+Estas fontes apoiam método, linguagem, literatura técnica e boas práticas. Não substituem lei, resolução, norma local obrigatória ou fonte técnica licenciada quando aplicável.
+
+| Fonte | Natureza | Aplicação | Regra extraída | Observação |
+| --- | --- | --- | --- | --- |
+| ABNT NBR 13752 - perícias de engenharia [VP] | Referência técnica paga - consultiva por analogia | Estrutura, escopo, vistoria, metodologia e apresentação de laudo. | Usar como backbone metodológico por analogia; não resolver causalidade mecânica apenas por ela. | Não copiar integralmente; guardar ficha, índice, notas próprias e forma de aquisição. |
+| Guias de evidência visual e boas práticas de documentação fotográfica [VP] | Fonte secundária consultiva | Contexto, autoria, data, local, metadados, sequência e preservação de fotos/vídeos. | Registrar quem, o quê, onde, quando e por que de cada imagem; preservar original. | Não substituir CPC, IBAPE ou referência oficial. |
+| IBAPE - Código de Ética e publicações institucionais [VP] | Fonte consultiva institucional | Imparcialidade, linguagem técnica, postura em diligência e vedação de conclusões tendenciosas. | Reforçar neutralidade e registro de interferências, sem confundir com norma do Confea. | Citar edição quando usado. |
+| ABNT NBR ISO/IEC 27037:2013 [VP] | Referência técnica paga - evidência digital | Identificação, coleta, aquisição e preservação de evidência digital. | Tratar fotos, vídeos, planilhas, logs e PDFs nativos como evidências digitais quando integridade e temporalidade importarem. | Não copiar integralmente; usar metadados, escopo e instrução de aquisição. |
+| POPs nacionais de perícia criminal e POP de Informática Forense/MJSP [VP] | Manual técnico consultivo por analogia | Estrutura de laudo, registro de datas, integridade de anexos eletrônicos, hash e origem. | Usar como boa prática para anexos digitais e documentação de evidências, não como obrigação legal de perícia cível. | Salvar somente materiais públicos e oficiais. |
+| Manuais e páginas oficiais de CREA sobre ART, TOS, perícia judicial e atribuições mecânicas [VP] | Manual operacional oficial | Emissão de ART, seleção de TOS, regularização, baixa, CAT e exemplos de atribuições. | Usar como orientação operacional do conselho competente, sem transformar guia local em lei geral. | Verificar o CREA do estado do processo/profissional. |

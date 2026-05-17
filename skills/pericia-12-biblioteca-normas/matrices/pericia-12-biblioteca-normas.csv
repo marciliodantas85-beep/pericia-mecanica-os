@@ -1,0 +1,4 @@
+﻿id_fonte,categoria,fonte,tipo,instituicao,url,status,frequencia,skill_afetada,procedimento
+FON-001,processo,CPC,fonte oficial,Planalto,https://www.planalto.gov.br/,verificar,semestral,01;04;08;09;10;11,conferir texto compilado
+FON-002,norma técnica,ABNT,fonte técnica paga,ABNT,https://www.abntcatalogo.com.br/,verificar,trimestral,05;06;07;08;09;12,registrar edição/status sem copiar íntegra
+FON-003,segurança,NR-12,fonte oficial,MTE,https://www.gov.br/trabalho-e-emprego/,verificar,mensal/caso,05;08;09;12,baixar texto vigente e registrar portaria

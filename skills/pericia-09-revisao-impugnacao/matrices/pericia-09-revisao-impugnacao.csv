@@ -1,0 +1,4 @@
+﻿achado_id,tipo,trecho,risco,fonte,correcao_sugerida,prioridade
+ACH-001,omissão,quesito sem resposta,pedido de esclarecimento,CPC arts. 473/477,responder ou justificar impossibilidade,alta
+ACH-002,método,análise sem método declarado,impugnação técnica,CPC art. 473,descrever método e evidências,alta
+ACH-003,fonte,norma sem edição,citação frágil,ABNT Catálogo,marcar edição/status/verificação,média

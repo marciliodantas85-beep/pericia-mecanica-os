@@ -1,0 +1,4 @@
+﻿evento,data_ciencia,prazo,unidade,vencimento,fonte,status,alerta,acao
+nomeação,preencher,conforme decisão,dias,calcular e verificar,CPC/decisão,pendente,D-5,triagem/aceite
+quesitos/assistentes,preencher,conforme CPC/decisão,dias,calcular e verificar,CPC art. 465,pendente,D-3,registrar matriz
+esclarecimentos,preencher,conforme decisão,dias,calcular e verificar,CPC art. 477,pendente,D-3,preparar resposta

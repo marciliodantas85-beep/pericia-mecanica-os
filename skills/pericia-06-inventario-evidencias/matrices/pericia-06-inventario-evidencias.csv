@@ -1,0 +1,4 @@
+﻿id_evidencia,tipo,descricao,origem,data_hora,arquivo_original,hash_sha256,quesito,uso_no_laudo,limitacao
+EVD-001,foto,vista geral da máquina,diligência,preencher,IMG_0001.jpg,calcular se cabível,Q-01,contexto,
+EVD-002,documento,certificado de calibração,autos,preencher,certificado.pdf,calcular se cabível,Q-02,metrologia,validade/escopo a verificar
+EVD-003,peça,rolamento danificado,local,preencher,registro físico,não aplicável,Q-03,análise de falha,custódia limitada se peça ficar com parte

@@ -1,0 +1,11 @@
+# Fontes Principais - Controle de Prazos da Perícia
+
+Legenda: `[VP]` indica fonte que deve ser verificada periodicamente quanto a vigência, edição, revogação, portaria, tabela ou atualização operacional.
+
+| Fonte | Natureza | Aplicação | Regra extraída | Observação |
+| --- | --- | --- | --- | --- |
+| Código de Processo Civil, arts. 91, 93, 95, 98, 148, 149, 156-158 e 464-480 [VP] | Norma obrigatória - lei processual | Nomeação, impedimento, honorários, diligências, quesitos, conteúdo mínimo do laudo, esclarecimentos e segunda perícia. | Separar objeto, método, análise técnica e respostas aos quesitos; controlar prazos e não extrapolar a designação judicial. | Usar texto oficial vigente; checar alterações antes de protocolo. |
+| Resolução CNJ 233/2016 - CPTEC e cadastro de peritos [VP] | Norma obrigatória - governança judicial | Cadastro, validação documental, reavaliação, deveres, impedimentos e restrições de atuação do perito. | Antes do aceite, checar cadastro, conflitos, atuação prévia como assistente técnico e deveres de sigilo, diligência e pontualidade. | Marcar como fonte sujeita a alterações do CNJ. |
+| Resolução do Órgão Especial TJCE 07/2024 [VP] | Norma obrigatória local - TJCE | Credenciamento, nomeação, pagamento, documentação e fluxo de peritos no TJCE. | Quando a perícia tramitar no TJCE, checar credenciamento, regra de pagamento, hipóteses excepcionais e documentos exigidos. | Fonte local prioritária; conferir atos posteriores. |
+| Manual do Perito no PJe do TJCE e páginas de documentação/certidões [VP] | Manual operacional oficial | Acesso aos autos, perfis perito e jus postulandi, protocolo de laudos, manifestações e pagamentos. | Após credenciamento, conferir perfis no PJe, acesso aos autos, documentação e canal correto de protocolo. | Manual orienta fluxo, mas não substitui CPC nem ato normativo. |
+| Portarias e tabelas de honorários do TJCE, incluindo Portaria 1218/2025 e 968/2026 [VP] | Norma obrigatória local - tabela e pagamento | Enquadramento de honorários, datas de vigência, rubricas e majoração local. | Selecionar a tabela pela data de realização da perícia e conferir a portaria vigente no portal oficial antes do uso. | Fonte altamente temporal; verificar periodicamente. |

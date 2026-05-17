@@ -1,0 +1,13 @@
+# Fontes Secundárias - Análise Documental Processual
+
+Estas fontes apoiam método, linguagem, literatura técnica e boas práticas. Não substituem lei, resolução, norma local obrigatória ou fonte técnica licenciada quando aplicável.
+
+| Fonte | Natureza | Aplicação | Regra extraída | Observação |
+| --- | --- | --- | --- | --- |
+| IBAPE/SP - Cartilha Perícias Judiciais de Engenharia e Arquitetura [VP] | Fonte consultiva institucional | Pontos controvertidos, estrutura do laudo, fotos, parecer de assistente, esclarecimentos e linguagem. | Usar como guia de método e redação, sem transformar cartilha em obrigação legal. | Citar edição e preservar procedência. |
+| IBAPE/SP - Norma Básica para Perícias de Engenharia e versões históricas [VP] | Fonte consultiva institucional/histórica | Terminologia, metodologia, objetividade, respostas a quesitos e estrutura de laudos. | Usar como apoio metodológico; conferir status, edição e compatibilidade com CPC 2015. | Não usar versão histórica como fundamento isolado. |
+| CNJ - Linguagem Simples e Manual de Padronização de Atos [VP] | Fonte consultiva institucional | Clareza, coesão, inteligibilidade e objetividade em laudos e petições. | Escrever em linguagem simples sem perder precisão técnica. | Aderente ao CPC, art. 473, parágrafo 1º. |
+| ABNT NBR ISO/IEC 27037:2013 [VP] | Referência técnica paga - evidência digital | Identificação, coleta, aquisição e preservação de evidência digital. | Tratar fotos, vídeos, planilhas, logs e PDFs nativos como evidências digitais quando integridade e temporalidade importarem. | Não copiar integralmente; usar metadados, escopo e instrução de aquisição. |
+| POPs nacionais de perícia criminal e POP de Informática Forense/MJSP [VP] | Manual técnico consultivo por analogia | Estrutura de laudo, registro de datas, integridade de anexos eletrônicos, hash e origem. | Usar como boa prática para anexos digitais e documentação de evidências, não como obrigação legal de perícia cível. | Salvar somente materiais públicos e oficiais. |
+| GUM, VIM, RBC/Inmetro, NIT-DICLA e DOQ-Cgcre correlatos [VP] | Referência técnica institucional | Terminologia metrológica, expressão de incerteza, rastreabilidade e acreditação. | Registrar unidade, método, instrumento, calibração, laboratório e incerteza sempre que a conclusão depender de medição. | Materiais públicos devem manter versão e procedência. |
+| ABNT NBR ISO/IEC 17025, ISO 10012 e ISO 5725 [VP] | Referência técnica paga - metrologia e ensaios | Competência de laboratórios, gestão de medição, repetibilidade, precisão e avaliação de resultados. | Nenhuma medição crítica deve ser usada sem checar instrumento, certificado, rastreabilidade, escopo e incerteza. | Guardar ficha e checklist, não a íntegra. |
