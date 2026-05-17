@@ -43,4 +43,3 @@ Depois reinicie o Codex para reindexar as skills.
 - Não reproduzir integralmente normas pagas, livros comerciais ou handbooks protegidos por licença.
 - Marcar fontes temporais como `[VERIFICAR ANTES DE USO REAL]`.
 - Validar CPC, CNJ, TJCE, Confea/Crea, ABNT, NR-12 e INMETRO antes de uso em processo real.
-
