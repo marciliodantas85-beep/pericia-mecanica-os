@@ -1,17 +1,18 @@
-# Critérios de Revisão - Petições do Perito
+# Criterios de Revisao - Peticoes do Perito
 
-## Revisão Obrigatória
+## Revisao Obrigatoria
 
-- Pedido está claro?
-- Fundamento mínimo foi citado?
-- Tom é de perito?
+- Pedido esta claro?
+- Fundamento minimo foi citado?
+- Tom e de perito?
 - Anexos e prazos foram conferidos?
+- A identidade usada e pessoal do perito quando a peca exigir essa forma?
 
-## Critérios Transversais
+## Criterios Transversais
 
 - Fonte de cada regra citada.
-- Fonte oficial separada de fonte técnica e consultiva.
-- Informação temporal marcada para verificação.
-- Norma paga sem reprodução integral.
-- Conclusão técnica apoiada em evidência, método ou limitação.
-- Texto sem atuação como advogado da parte.
+- Fonte oficial separada de fonte tecnica e consultiva.
+- Informacao temporal marcada para verificacao.
+- Norma paga sem reproducao integral.
+- Conclusao tecnica apoiada em evidencia, metodo ou limitacao.
+- Texto sem atuacao como advogado da parte.

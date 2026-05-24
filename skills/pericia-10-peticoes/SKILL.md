@@ -1,62 +1,65 @@
 ---
 name: pericia-10-peticoes
-description: Gerar minutas de petições do perito judicial: aceite, escusa, honorários, diligência, pedido de documentos, prorrogação, juntada de laudo e esclarecimentos.
+description: Gerar minutas de peticoes do perito judicial: aceite, escusa, honorarios, diligencia, pedido de documentos, prorrogacao, juntada de laudo, esclarecimentos e manifestacoes para organizacao de vistoria.
 ---
 
-# Petições do Perito
+# Peticoes do Perito
 
 ## Quando Usar
 
-Use quando o perito precisa peticionar no processo de forma impessoal, técnica e limitada ao encargo pericial.
+Use quando o perito precisa peticionar no processo de forma impessoal, tecnica e limitada ao encargo pericial.
+
+Para manifestacoes de organizacao de vistoria e pecas que serao levadas a PDF, use a identidade profissional pessoal do perito no cabecalho e na assinatura, com nome completo e CREA, sem marca empresarial e sem logo.
 
 ## Entradas Esperadas
 
-- tipo de petição
+- tipo de peticao
 - processo
-- decisão
+- decisao
 - prazo
 - pedido
 - fundamento
 - anexos
-- fontes aplicáveis
+- fontes aplicaveis
 
 ## Fluxo Operacional
 
-1. Ler a demanda e identificar processo, objeto, partes, tribunal, datas e documentos disponíveis.
-2. Separar fontes oficiais, fontes técnicas, fontes consultivas e bases internas.
-3. Aplicar as regras abaixo, citando fonte e marcando itens que exigem verificação antes de uso real.
-4. Gerar a saída no template da skill, registrando evidências, limitações e pendências.
-5. Executar o checklist e os critérios de revisão antes de entregar qualquer texto para uso externo.
+1. Ler a demanda e identificar processo, objeto, partes, tribunal, datas e documentos disponiveis.
+2. Separar fontes oficiais, fontes tecnicas, fontes consultivas e bases internas.
+3. Aplicar as regras abaixo, citando fonte e marcando itens que exigem verificacao antes de uso real.
+4. Gerar a saida no template da skill, registrando evidencias, limitacoes e pendencias.
+5. Executar o checklist e os criterios de revisao antes de entregar qualquer texto para uso externo.
 
 ## Regras Operacionais Com Fonte
 
-| Regra operacional | Fonte | Tipo | Verificação |
+| Regra operacional | Fonte | Tipo | Verificacao |
 |---|---|---|---|
-| Petições do perito devem ser limitadas ao encargo, pedido processual claro e fundamento mínimo. | CPC arts. 156-158, 465, 466, 477 e correlatos | Fonte oficial | [VERIFICAR ANTES DE USO REAL] |
-| Honorários devem citar regime do CPC e, quando aplicável, CNJ/tribunal local. | CPC art. 95; Resolução CNJ 232/2016; atos locais | Fonte oficial | [VERIFICAR ANTES DE USO REAL] |
-| Diligência deve observar ciência das partes quando aplicável. | CPC art. 474 | Fonte oficial | [VERIFICAR ANTES DE USO REAL] |
+| Peticoes do perito devem ser limitadas ao encargo, pedido processual claro e fundamento minimo. | CPC arts. 156-158, 465, 466, 477 e correlatos | Fonte oficial | [VERIFICAR ANTES DE USO REAL] |
+| Honorarios devem citar regime do CPC e, quando aplicavel, CNJ/tribunal local. | CPC art. 95; Resolucao CNJ 232/2016; atos locais | Fonte oficial | [VERIFICAR ANTES DE USO REAL] |
+| Diligencia deve observar ciencia das partes quando aplicavel. | CPC art. 474 | Fonte oficial | [VERIFICAR ANTES DE USO REAL] |
 | ART e regularidade profissional podem ser informadas quando relevantes ao encargo. | Lei 6.496/1977; Confea/Crea | Fonte oficial | [VERIFICAR ANTES DE USO REAL] |
-| A linguagem deve ser neutra, impessoal e técnica; não deve defender parte. | CPC; Manual de Redação oficial como apoio | Fonte oficial/consultiva | [VERIFICAR ANTES DE USO REAL] |
+| A linguagem deve ser neutra, impessoal e tecnica; nao deve defender parte. | CPC; Manual de Redacao oficial como apoio | Fonte oficial/consultiva | [VERIFICAR ANTES DE USO REAL] |
 
-## Saídas Esperadas
+## Saidas Esperadas
 
-- minuta de petição
+- minuta de peticao
 - checklist de protocolo
 - lista de anexos
 - alertas de fundamento e prazo
 
-## Regras de Segurança Técnica
+## Regras de Seguranca Tecnica
 
-- Não inventar norma, artigo, decisão judicial, edição de norma técnica ou número de portaria.
-- Marcar como [VERIFICAR ANTES DE USO REAL] toda fonte temporal, local, paga, substituível ou dependente do processo concreto.
-- Separar fonte oficial, fonte técnica e fonte consultiva em toda saída.
-- Não reproduzir integralmente normas ABNT, livros comerciais, handbooks ou standards protegidos por licença.
-- Não transformar cartilha, fabricante, literatura técnica ou boa prática em obrigação legal.
+- Nao inventar norma, artigo, decisao judicial, edicao de norma tecnica ou numero de portaria.
+- Marcar como [VERIFICAR ANTES DE USO REAL] toda fonte temporal, local, paga, substituivel ou dependente do processo concreto.
+- Separar fonte oficial, fonte tecnica e fonte consultiva em toda saida.
+- Nao reproduzir integralmente normas ABNT, livros comerciais, handbooks ou standards protegidos por licenca.
+- Nao transformar cartilha, fabricante, literatura tecnica ou boa pratica em obrigacao legal.
 
 ## Arquivos de Apoio
 
 - `references/REFERENCIAS.md`
 - `templates/PETICAO_PERITO_MODELO.md`
+- `templates/PETICAO_MANIFESTACAO_VISTORIA_PERICIAL.md`
 - `checklists/CHECKLIST.md`
 - `matrices/pericia-10-peticoes.csv`
 - `examples/entrada.md`

@@ -1,4 +1,5 @@
-﻿tipo_peticao,gatilho,fonte,pedido_principal,anexos,risco
-aceite,nomeação,CPC arts. 156-158,aceitar encargo/registrar dados,currículo/ART se cabível,impedimento não verificado
-honorários,intimação para proposta,CPC art. 95; CNJ/TJCE se aplicável,arbitramento/depósito,memória de cálculo,tabela desatualizada
-diligência,necessidade de vistoria,CPC art. 474,designação/intimação,roteiro/endereços,ciência das partes ausente
+tipo_peticao,gatilho,fonte,pedido_principal,anexos,risco
+aceite,nomeacao,CPC arts. 156-158,aceitar encargo/registrar dados,curriculo/ART se cabivel,impedimento nao verificado
+honorarios,intimacao para proposta,CPC art. 95; CNJ/TJCE se aplicavel,arbitramento/deposito,memoria de calculo,tabela desatualizada
+diligencia,necessidade de vistoria,CPC art. 474,designacao/intimacao,roteiro/enderecos,ciencia das partes ausente
+manifestacao_vistoria,organizacao de vistoria,CPC arts. 465 e 474; art. 95 quando houver custeio,designar vistoria e requisitar documentos,localizacao do veiculo e documentos tecnicos,ausencia de acesso ao bem
